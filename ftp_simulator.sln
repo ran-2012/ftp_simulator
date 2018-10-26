@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ftp_simulator", "ftp_simulator\ftp_simulator.vcxproj", "{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "server\server.vcxproj", "{F969B3B2-4D3E-41F3-92A4-048BD103E208}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +15,22 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Debug|x64.ActiveCfg = Debug|x64
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Debug|x64.Build.0 = Debug|x64
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Debug|x86.ActiveCfg = Debug|Win32
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Debug|x86.Build.0 = Debug|Win32
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Release|x64.ActiveCfg = Release|x64
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Release|x64.Build.0 = Release|x64
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Release|x86.ActiveCfg = Release|Win32
-		{8C90D9CA-A92F-4BE3-8A55-39E97A8B0245}.Release|x86.Build.0 = Release|Win32
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Debug|x64.ActiveCfg = Debug|x64
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Debug|x64.Build.0 = Debug|x64
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Debug|x86.ActiveCfg = Debug|Win32
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Debug|x86.Build.0 = Debug|Win32
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Release|x64.ActiveCfg = Release|x64
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Release|x64.Build.0 = Release|x64
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Release|x86.ActiveCfg = Release|Win32
+		{B0E4BA56-C0A1-43CD-8DA9-BCF40CC9E19A}.Release|x86.Build.0 = Release|Win32
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Debug|x64.ActiveCfg = Debug|x64
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Debug|x64.Build.0 = Debug|x64
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Debug|x86.ActiveCfg = Debug|Win32
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Debug|x86.Build.0 = Debug|Win32
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Release|x64.ActiveCfg = Release|x64
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Release|x64.Build.0 = Release|x64
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Release|x86.ActiveCfg = Release|Win32
+		{F969B3B2-4D3E-41F3-92A4-048BD103E208}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
