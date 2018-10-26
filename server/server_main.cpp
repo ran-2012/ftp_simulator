@@ -1,17 +1,10 @@
-//
-// server.cpp
-// ~~~~~~~~~~
-//
-// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+
 
 #define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
 #define _WIN32_WINNT 0x0501
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <exception>
 #include <ctime>
 #include <iostream>
 #include <string>
@@ -35,17 +28,32 @@ int main()
 
 		tcp::acceptor acceptor(io_service, tcp::endpoint(tcp::v4(), 13));
 
-		for (;;)
+		while(1)
 		{
+			//establish connection
 			tcp::socket socket(io_service);
 			acceptor.accept(socket);
+			//send message loop
+			while (1)
+			{
+				try
+				{
+					asio::deadline_timer t(io_service, boost::posix_time::seconds(1));
+					t.wait();
 
-			std::string message = make_daytime_string();
+					std::string message = make_daytime_string();
 
-			asio::error_code ignored_error;
-			asio::write(socket, asio::buffer(message), ignored_error);
+					asio::error_code ignored_error;
+					asio::write(socket, asio::buffer(message), ignored_error);
 
-			std::cout << "message sent:" << message << std::endl;
+					std::cout << "message sent:" << message << std::endl;
+				}
+				catch (std::exception e)
+				{
+					std::cerr << e.what() << std::endl;
+					break;
+				}
+			}
 		}
 	}
 	catch (std::exception& e)

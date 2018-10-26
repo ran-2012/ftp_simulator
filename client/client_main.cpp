@@ -1,12 +1,4 @@
-//
-// client.cpp
-// ~~~~~~~~~~
-//
-// Copyright (c) 2003-2015 Christopher M. Kohlhoff (chris at kohlhoff dot com)
-//
-// Distributed under the Boost Software License, Version 1.0. (See accompanying
-// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
+
 
 #include <iostream>
 #include <asio.hpp>
@@ -25,27 +17,39 @@ int main(int argc, char* argv[])
 		tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 
 
-		for (;;)
+		while(1)
 		{
-			asio::deadline_timer t(io_service, boost::posix_time::seconds(1));
-			t.wait();
-
+			//connection
 			tcp::socket socket(io_service);
 			asio::connect(socket, endpoint_iterator); 
 
-			char buf[256];
-			asio::error_code error;
+			while (1)
+			{
+				try 
+				{
+					char buf[256];
+					asio::error_code error;
 
-			size_t len = socket.read_some(asio::buffer(buf), error);
+					size_t len = socket.read_some(asio::buffer(buf), error);
 
-			if (error == asio::error::eof)
-				;//break; // Connection closed cleanly by peer.
-			else if (error)
-				throw asio::system_error(error); // Some other error.
-			else
-				std::cout << "message received:";
-				std::cout.write(buf, len);
-				std::cout << std::endl;
+					if (error == asio::error::eof)
+						;//break; // Connection closed cleanly by peer.
+					else if (error)
+						throw asio::system_error(error); // Some other error.
+					else
+					{
+						std::cout << "message received:";
+						std::cout.write(buf, len);
+						std::cout << std::endl;
+					}
+
+				}
+				catch (std::exception e)
+				{
+					std::cerr << e.what() << std::endl;
+					break;
+				}
+			}
 		}
 	}
 	catch (std::exception& e)
