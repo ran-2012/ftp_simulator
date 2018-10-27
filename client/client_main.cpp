@@ -1,8 +1,13 @@
 
+#define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE
+#define _WIN32_WINNT 0x0501
+#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
+
 #include <asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include "../package.h"
 
 int main(int argc, char* argv[])
 {
@@ -13,7 +18,7 @@ int main(int argc, char* argv[])
 		asio::io_service io_service;
 
 		tcp::resolver resolver(io_service);
-		tcp::resolver::query query("127.0.0.1", "daytime");
+		tcp::resolver::query query("127.0.0.1", "60000");
 		tcp::resolver::iterator endpoint_iterator = resolver.resolve(query);
 
 
@@ -27,10 +32,11 @@ int main(int argc, char* argv[])
 			{
 				try 
 				{
-					char buf[256];
 					asio::error_code error;
 
-					size_t len = socket.read_some(asio::buffer(buf), error);
+					package::Package p;
+
+					package::packageReceive(socket, p);
 
 					if (error == asio::error::eof)
 						;//break; // Connection closed cleanly by peer.
@@ -39,7 +45,7 @@ int main(int argc, char* argv[])
 					else
 					{
 						std::cout << "message received:";
-						std::cout.write(buf, len);
+						std::cout << p.getRawData();
 						std::cout << std::endl;
 					}
 
