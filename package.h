@@ -32,7 +32,7 @@ namespace package
 		std::string getData()const;
 		size_t size()const;
 	};
-
+	
 	class Transceiver
 	{
 		//a receive opreation may read more than a package, use buffer to store next part of package

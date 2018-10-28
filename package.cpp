@@ -190,6 +190,7 @@ namespace package
 					if (msgLen - usedLen < Package::headSize)
 					{
 						buffer.push_back(std::string(buf + usedLen, msgLen - usedLen));
+						lastFinished = false;
 						usedLen = msgLen;
 					}
 					else
@@ -203,6 +204,7 @@ namespace package
 						else
 						{
 							buffer.push_back(std::string(buf + usedLen, msgLen - usedLen));
+							lastFinished = true;
 							usedLen = msgLen;
 						}
 					}

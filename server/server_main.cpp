@@ -13,14 +13,8 @@
 #include <filesystem>
 #include "../package.h"
 
+#define DIRECTORY "files"
 #define PORT 60000
-
-std::string make_daytime_string()
-{
-	using namespace std::chrono; 
-	auto time = system_clock::to_time_t(system_clock::now());
-	return std::ctime(&time);
-}
 
 int main()
 {
@@ -38,18 +32,16 @@ int main()
 			tcp::socket socket(io_service);
 			acceptor.accept(socket);
 
-			asio::error_code ignored_error;
-			//filesystem test
-			using namespace std::experimental::filesystem;
-			/*for (auto& fi : directory_iterator("files"))
-			{
-				std::string message =fi.path().string();
-				std::cout << message << std::endl;
-				asio::write(socket, asio::buffer(message), ignored_error);
-			}*/
-
 			package::Transceiver tran;
 			tran.bindSocket(socket);
+
+			asio::error_code ignored_error;
+			package::Package p;
+			std::string input;
+			std::string cmd;
+
+			p.pack("server connected\n");
+			tran.send(p);
 			//send message loop
 			while (1)
 			{
@@ -57,15 +49,29 @@ int main()
 				{
 					//asio::deadline_timer t(io_service, boost::posix_time::seconds(1));
 					//t.wait();
-
-					package::Package p;
-					std::string message = make_daytime_string();
-					p.pack(message);
-					tran.send(p);
-
-					//asio::write(socket, asio::buffer(message), ignored_error);
-
-					std::cout << "message sent:" << message << std::endl;
+					tran.receive(p);
+					input = p.getRawData();
+					std::cout << input << std::endl;
+					
+					cmd = input.substr(0, input.find(' '));
+					if (cmd == "list")
+					{
+						using namespace std::experimental::filesystem;
+						int count = 0;
+						for (auto& fi : directory_iterator(DIRECTORY))
+						{
+							++count;
+						}
+						std::string strn(' ', 1);
+						strn[0] = count;
+						p.pack(strn);
+						tran.send(p);
+						for (auto& fi : directory_iterator(DIRECTORY))
+						{
+							p.pack(fi.path().filename().string());
+							tran.send(p);
+						}
+					}
 				}
 				catch (std::exception e)
 				{

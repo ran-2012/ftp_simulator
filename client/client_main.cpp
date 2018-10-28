@@ -9,6 +9,9 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "../package.h"
 
+#define SERVER_IP "127.0.0.1"
+#define SERVER_PORT "60000"
+
 int main(int argc, char* argv[])
 {
 	using asio::ip::tcp;
@@ -30,28 +33,47 @@ int main(int argc, char* argv[])
 			
 			package::Transceiver tran;
 			tran.bindSocket(socket);
-			//
+
+			asio::error_code error;
+			package::Package p;
+			std::string input;
+			std::string cmd;
+
+			tran.receive(p);
+			std::cout << p.getRawData() << std::endl;
+			//main loop
 			while (1)
 			{
 				try 
 				{
-					asio::error_code error;
+					std::cout << '>';
+					std::getline(std::cin, input);
 
-					package::Package p;
+					p.pack(input);
+					tran.send(p);
 
-					tran.receive(p);
+					cmd = input.substr(0, input.find(' '));
+					if (cmd == "list")
+					{
+						tran.receive(p);
+						std::string strn = p.getRawData();
+						//the number of files
+						int n = strn[0];
+						std::cout << n << " files in server" << std::endl;
+						for (int i = 0; i < n; ++i)
+						{
+							tran.receive(p);
+							std::cout << '\t' << p.getRawData() << std::endl;
+						}
+					}
+					else if (cmd == "get")
+					{
 
-					if (error == asio::error::eof)
-						;//break; // Connection closed cleanly by peer.
-					else if (error)
-						throw asio::system_error(error); // Some other error.
+					}
 					else
 					{
-						std::cout << "message received:";
-						std::cout << p.getRawData();
-						std::cout << std::endl;
+						std::cout << "Unknown command" << std::endl;
 					}
-
 				}
 				catch (std::exception e)
 				{
