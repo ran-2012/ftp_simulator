@@ -41,24 +41,27 @@ int main()
 			asio::error_code ignored_error;
 			//filesystem test
 			using namespace std::experimental::filesystem;
-			for (auto& fi : directory_iterator("files"))
+			/*for (auto& fi : directory_iterator("files"))
 			{
 				std::string message =fi.path().string();
 				std::cout << message << std::endl;
 				asio::write(socket, asio::buffer(message), ignored_error);
-			}
+			}*/
+
+			package::Transceiver tran;
+			tran.bindSocket(socket);
 			//send message loop
 			while (1)
 			{
 				try
 				{
-					asio::deadline_timer t(io_service, boost::posix_time::seconds(1));
-					t.wait();
+					//asio::deadline_timer t(io_service, boost::posix_time::seconds(1));
+					//t.wait();
 
 					package::Package p;
 					std::string message = make_daytime_string();
 					p.pack(message);
-					package::packageSend(socket, p);
+					tran.send(p);
 
 					//asio::write(socket, asio::buffer(message), ignored_error);
 

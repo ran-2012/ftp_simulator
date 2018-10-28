@@ -27,7 +27,10 @@ int main(int argc, char* argv[])
 			//connection
 			tcp::socket socket(io_service);
 			asio::connect(socket, endpoint_iterator); 
-
+			
+			package::Transceiver tran;
+			tran.bindSocket(socket);
+			//
 			while (1)
 			{
 				try 
@@ -36,7 +39,7 @@ int main(int argc, char* argv[])
 
 					package::Package p;
 
-					package::packageReceive(socket, p);
+					tran.receive(p);
 
 					if (error == asio::error::eof)
 						;//break; // Connection closed cleanly by peer.
