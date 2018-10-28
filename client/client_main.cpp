@@ -3,6 +3,8 @@
 #define _WIN32_WINNT 0x0501
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <fstream>
+#include <sstream>
 #include <iostream>
 
 #include <asio.hpp>
@@ -11,6 +13,7 @@
 
 #define SERVER_IP "127.0.0.1"
 #define SERVER_PORT "60000"
+#define DIRECTORY "client_files"
 
 int main(int argc, char* argv[])
 {
@@ -68,7 +71,37 @@ int main(int argc, char* argv[])
 					}
 					else if (cmd == "get")
 					{
+						std::string fileName = input.erase(0, input.find(' ') + 1);
+						std::stringstream ss;
 
+						p.pack(fileName);
+						tran.send(p);
+
+						fileName = '/' + fileName;
+						fileName = DIRECTORY + fileName;
+
+						std::ofstream ofs;
+						ofs.open(fileName, std::ios_base::binary);
+
+						tran.receive(p);
+						std::string ssize = p.getRawData();
+						size_t size;
+						ss << ssize;
+						ss >> size;
+
+						std::cout << fileName << " file size : " << size << std::endl;
+						
+						const auto bufSize = package::Package::maxBodySize;
+						while (size > bufSize)
+						{
+							tran.receive(p);
+							ofs.write(p.getRawData().c_str(), bufSize);
+							size -= bufSize;
+						}
+
+						tran.receive(p);
+						ofs.write(p.getRawData().c_str(), size);
+						ofs.close();
 					}
 					else
 					{

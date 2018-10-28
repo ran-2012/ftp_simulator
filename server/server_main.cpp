@@ -6,6 +6,8 @@
 #include <ctime>
 #include <string>
 #include <chrono>
+#include <fstream>
+#include <sstream>
 #include <iostream>
 #include <exception>
 
@@ -13,7 +15,7 @@
 #include <filesystem>
 #include "../package.h"
 
-#define DIRECTORY "files"
+#define DIRECTORY "server_files"
 #define PORT 60000
 
 int main()
@@ -71,6 +73,43 @@ int main()
 							p.pack(fi.path().filename().string());
 							tran.send(p);
 						}
+					}
+					if (cmd == "get")
+					{
+						using namespace std::experimental::filesystem;
+						std::string fileName;
+						std::stringstream ss;
+
+						tran.receive(p);
+
+						fileName = p.getRawData();
+						fileName = '/' + fileName;
+						fileName = DIRECTORY + fileName;
+
+						std::cout << fileName << std::endl;
+						auto size =  file_size(fileName);
+						std::ifstream ifs;
+						ifs.open(fileName, std::ios_base::binary);
+
+						ss << size;
+						p.pack(ss.str());
+						tran.send(p);
+
+						const auto bufSize = package::Package::maxBodySize;
+						char buf[bufSize];
+						while (size > bufSize)
+						{
+							ifs.read(buf, bufSize);
+							p.pack(buf);
+							tran.send(p);
+							size -= bufSize;
+						}
+
+						ifs.read(buf, size);
+						p.pack(std::string(buf, size));
+						tran.send(p);
+
+						ifs.close();
 					}
 				}
 				catch (std::exception e)
