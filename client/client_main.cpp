@@ -12,7 +12,7 @@
 #include "../package.h"
 
 #define SERVER_IP "127.0.0.1"
-#define SERVER_PORT "60000"
+#define SERVER_PORT "20021"
 #define DIRECTORY "client_files"
 
 int main(int argc, char* argv[])

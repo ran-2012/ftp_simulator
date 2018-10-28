@@ -16,7 +16,7 @@
 #include "../package.h"
 
 #define DIRECTORY "server_files"
-#define PORT 60000
+#define PORT 20021
 
 int main()
 {
